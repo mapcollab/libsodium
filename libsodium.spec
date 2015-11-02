@@ -1,10 +1,10 @@
 Name:           libsodium
-Version:        1.0.3
+Version:        1.0.6
 Release:        1%{?dist}
 Summary:        The Sodium crypto library
 License:        ISC
 URL:            http://libsodium.org/
-Source0:        http://download.libsodium.org/libsodium/releases/%{name}-%{version}.tar.gz
+Source0:        %{name}-%{version}.tar.gz
 
 %description
 Sodium is a new, easy-to-use software library for encryption, decryption, 
@@ -31,6 +31,7 @@ developing applications that use %{name} libraries.
 %setup -q
 
 %build
+./autogen.sh
 %configure --disable-static --disable-silent-rules
 make %{?_smp_mflags}
 
@@ -60,6 +61,9 @@ make check
 %{_libdir}/pkgconfig/libsodium.pc
 
 %changelog
+* Mon Nov 01 2015 Tomasz Rostanski <tomasz.rostanski@thalesgroup.com> - 1.0.6-1
+- Update to 1.0.6
+
 * Mon Jul 13 2015 Christopher Meng <rpm@cicku.me> - 1.0.3-1
 - Update to 1.0.3
 
