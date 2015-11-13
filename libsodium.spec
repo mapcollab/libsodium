@@ -61,7 +61,7 @@ make check
 %{_libdir}/pkgconfig/libsodium.pc
 
 %changelog
-* Mon Nov 01 2015 Tomasz Rostanski <tomasz.rostanski@thalesgroup.com> - 1.0.6-1
+* Mon Nov 02 2015 Tomasz Rostanski <tomasz.rostanski@thalesgroup.com> - 1.0.6-1
 - Update to 1.0.6
 
 * Mon Jul 13 2015 Christopher Meng <rpm@cicku.me> - 1.0.3-1
