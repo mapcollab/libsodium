@@ -1,6 +1,6 @@
 Name:           libsodium
 Version:        1.0.6
-Release:        1
+Release:        2
 Summary:        The Sodium crypto library
 License:        ISC
 URL:            http://libsodium.org/
@@ -61,6 +61,13 @@ make check
 %{_libdir}/pkgconfig/libsodium.pc
 
 %changelog
+* Thu Apr 21 2016 Michal Gawlik <michal.gawlik@thalesgroup.com> 1.0.6-2
+- tito: switch to ReleaseTagger (michal.gawlik@thalesgroup.com)
+- libsodium.spec: fix bogus date in changelog
+  (tomasz.rostanski@thalesgroup.com.pl)
+- libsodium.spec: remove dist name from rpm version
+  (tomasz.rostanski@thalesgroup.com.pl)
+
 * Mon Nov 02 2015 Tomasz Rostanski <tomasz.rostanski@thalesgroup.com> - 1.0.6-1
 - Update to 1.0.6
 
