@@ -20,6 +20,7 @@ main(void)
     size_t        i;
     size_t        j;
 
+    assert(crypto_generichash_blake2b_statebytes() >= sizeof st);
     for (h = 0; h < crypto_generichash_blake2b_KEYBYTES_MAX; ++h) {
         k[h] = (unsigned char) h;
     }
@@ -77,8 +78,6 @@ main(void)
         &st, k, crypto_generichash_blake2b_KEYBYTES_MAX,
         crypto_generichash_blake2b_BYTES_MAX, salt, NULL);
     crypto_generichash_blake2b_update(&st, in, MAXLEN);
-    assert(crypto_generichash_blake2b_final(
-        &st, out, crypto_generichash_blake2b_BYTES_MAX + 1U) == -1);
     crypto_generichash_blake2b_final(
         &st, out, crypto_generichash_blake2b_BYTES_MAX);
     for (j = 0; j < crypto_generichash_blake2b_BYTES_MAX; ++j) {
@@ -98,7 +97,7 @@ main(void)
     memset(out, 0, sizeof out);
     crypto_generichash_blake2b_salt_personal(
         out, crypto_generichash_blake2b_BYTES_MAX, in, MAXLEN,
-        NULL, crypto_generichash_blake2b_KEYBYTES_MAX, salt, personal);
+        NULL, 0U, salt, personal);
     for (j = 0; j < crypto_generichash_blake2b_BYTES_MAX; ++j) {
         printf("%02x", (unsigned int) out[j]);
     }
@@ -131,6 +130,19 @@ main(void)
     }
     printf("\n");
 
+    assert(crypto_generichash_blake2b_salt_personal
+           (NULL, 0,
+            in, (unsigned long long) sizeof in,
+            k, sizeof k, NULL, NULL) == -1);
+    assert(crypto_generichash_blake2b_salt_personal
+           (NULL, crypto_generichash_BYTES_MAX + 1,
+            in, (unsigned long long) sizeof in,
+            k, sizeof k, NULL, NULL) == -1);
+    assert(crypto_generichash_blake2b_salt_personal
+           (NULL, (unsigned long long) sizeof in,
+            in, (unsigned long long) sizeof in,
+            k, crypto_generichash_KEYBYTES_MAX + 1, NULL, NULL) == -1);
+
     crypto_generichash_blake2b_init_salt_personal(&st, NULL, 0U, crypto_generichash_BYTES,
                                                   NULL, personal);
     crypto_generichash_blake2b_update(&st, in, MAXLEN);
@@ -149,24 +161,13 @@ main(void)
     }
     printf("\n");
 
-    assert(crypto_generichash_blake2b_init_salt_personal(&st, k, sizeof k, 0U,
-                                                         salt, personal) == -1);
-    assert(crypto_generichash_blake2b_init_salt_personal(&st, k, sizeof k,
-                                                         crypto_generichash_BYTES_MAX + 1U,
-                                                         salt, personal) == -1);
-    assert(crypto_generichash_blake2b_init_salt_personal(&st, k,
-                                                         crypto_generichash_KEYBYTES_MAX + 1U,
-                                                         sizeof out, salt, personal) == -1);
+    assert(crypto_generichash_blake2b_init_salt_personal
+           (&st, k, sizeof k, 0, NULL, NULL) == -1);
+    assert(crypto_generichash_blake2b_init_salt_personal
+           (&st, k, sizeof k, crypto_generichash_blake2b_BYTES_MAX + 1, NULL, NULL) == -1);
+    assert(crypto_generichash_blake2b_init_salt_personal
+           (&st, k, crypto_generichash_blake2b_KEYBYTES_MAX + 1, sizeof out, NULL, NULL) == -1);
 
-    assert(crypto_generichash_blake2b_salt_personal(out, 0U, in, MAXLEN,
-                                                    k, sizeof k,
-                                                    salt, personal) == -1);
-    assert(crypto_generichash_blake2b_salt_personal(out, crypto_generichash_BYTES_MAX + 1U,
-                                                    in, MAXLEN, k, sizeof k,
-                                                    salt, personal) == -1);
-    assert(crypto_generichash_blake2b_salt_personal(out, sizeof out, in, MAXLEN,
-                                                    k, crypto_generichash_KEYBYTES_MAX + 1U,
-                                                    salt, personal) == -1);
     assert(crypto_generichash_blake2b_init_salt_personal(&st, k, sizeof k, crypto_generichash_BYTES,
                                                          NULL, personal) == 0);
     assert(crypto_generichash_blake2b_init_salt_personal(&st, k, sizeof k, crypto_generichash_BYTES,

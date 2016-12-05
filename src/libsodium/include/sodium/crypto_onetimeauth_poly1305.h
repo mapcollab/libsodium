@@ -5,7 +5,7 @@
 #include "export.h"
 
 #ifdef __cplusplus
-# if __GNUC__
+# ifdef __GNUC__
 #  pragma GCC diagnostic ignored "-Wlong-long"
 # endif
 extern "C" {
@@ -16,9 +16,8 @@ extern "C" {
 #include <stdint.h>
 #include <stdio.h>
 
-typedef struct crypto_onetimeauth_poly1305_state {
-    unsigned long long aligner;
-    unsigned char      opaque[136];
+typedef CRYPTO_ALIGN(16) struct crypto_onetimeauth_poly1305_state {
+    unsigned char opaque[256];
 } crypto_onetimeauth_poly1305_state;
 
 #define crypto_onetimeauth_poly1305_BYTES 16U

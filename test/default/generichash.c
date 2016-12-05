@@ -1291,7 +1291,7 @@ static struct {
     }
 };
 
-int
+static int
 tv(void)
 {
     unsigned char *expected_out;
@@ -1367,19 +1367,15 @@ main(void)
     }
     printf("\n");
 
-    memset(out, 0, sizeof out);
-    crypto_generichash(out, crypto_generichash_BYTES_MAX, in,
-                       (unsigned long long) i, NULL, 1U);
-    for (j = 0; j < crypto_generichash_BYTES_MAX; ++j) {
-        printf("%02x", (unsigned int) out[j]);
-    }
-    printf("\n");
-
-    assert(crypto_generichash(out, 0U, in, sizeof in, k, sizeof k) == -1);
-    assert(crypto_generichash(out, crypto_generichash_BYTES_MAX + 1U,
-                              in, sizeof in, k, sizeof k) == -1);
-    assert(crypto_generichash(out, sizeof out, in, sizeof in,
-                              k, crypto_generichash_KEYBYTES_MAX + 1U) == -1);
+    assert(crypto_generichash(NULL, 0,
+                              in, (unsigned long long) sizeof in,
+                              k, sizeof k) == -1);
+    assert(crypto_generichash(NULL, crypto_generichash_BYTES_MAX + 1,
+                              in, (unsigned long long) sizeof in,
+                              k, sizeof k) == -1);
+    assert(crypto_generichash(NULL, (unsigned long long) sizeof in,
+                              in, (unsigned long long) sizeof in,
+                              k, crypto_generichash_KEYBYTES_MAX + 1) == -1);
 
     assert(crypto_generichash_bytes_min() > 0U);
     assert(crypto_generichash_bytes_max() > 0U);
